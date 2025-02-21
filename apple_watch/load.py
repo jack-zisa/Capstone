@@ -9,6 +9,11 @@ def load(persons: dict):
         for filename in os.listdir(data_path):
             filedata = filename.split('.')
             key = hash(filedata[0])
+
+            if key in os.listdir('exports/'):
+                print(f'Already parsed person \'{key}\'')
+                continue
+            
             if key in persons:
                 person: objs.Person = persons.get(key)
                 if person.data_source_type == objs.APPLE_WATCH and filedata[1] == 'xml':

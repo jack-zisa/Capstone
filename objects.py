@@ -1,3 +1,5 @@
+import hashlib
+
 # Data source keys
 APPLE_WATCH: str = 'apple_watch'
 FITBIT: str = 'fitbit'
@@ -32,7 +34,7 @@ class Person:
         self.weight = weight
         self.data_source_type = data_source_type
         self.data = data
-        self.uuid = hash(name)
+        self.uuid = hashlib.sha256(name.encode('utf-8')).hexdigest()
         self.city = city
         self.state = state
         self.ethnicity = ethnicity

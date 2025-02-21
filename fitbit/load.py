@@ -8,6 +8,11 @@ def load(persons: dict):
         for dir in os.listdir(data_path):
             if os.path.isdir(f'{data_path}/{dir}'):
                 key = hash(dir)
+
+                if key in os.listdir('exports/'):
+                    print(f'Already parsed person \'{key}\'')
+                    continue
+
                 if key in persons:
                     person: objs.Person = persons.get(key)
                     if person.data_source_type == objs.FITBIT:
