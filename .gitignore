@@ -1,0 +1,6 @@
+/data
+/exports
+/__pycache__
+test_data.xlsx
+/apple_watch/__pycache__
+/fitbit/__pycache__
