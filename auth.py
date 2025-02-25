@@ -1,7 +1,13 @@
 import webbrowser
 from urllib.parse import urlencode
+import requests
+from requests.auth import HTTPBasicAuth
+
+tokens: dict = None
 
 def authenticate(client_id: str, client_secret: str):
+    global tokens
+
     REDIRECT_URI = 'https://github.com/jack-zisa/Capstone'
     SCOPE = 'activity heartrate location nutrition profile settings sleep social weight'
     AUTH_URL = 'https://www.fitbit.com/oauth2/authorize'
@@ -19,9 +25,6 @@ def authenticate(client_id: str, client_secret: str):
     webbrowser.open(auth_link)
 
     # STEP 2 - TOKENS
-
-    import requests
-    from requests.auth import HTTPBasicAuth
 
     TOKEN_URL = 'https://api.fitbit.com/oauth2/token'
 
@@ -43,17 +46,17 @@ def authenticate(client_id: str, client_secret: str):
     )
 
     tokens = response.json()
-    print('Access Token:', tokens.get('access_token'))
-    print('Refresh Token:', tokens.get('refresh_token'))
+    #print('Access Token:', tokens.get('access_token'))
+    #print('Refresh Token:', tokens.get('refresh_token'))    
 
-    # STEP 3 - REQUEST DATA
+def request(url: str) -> dict:
+    global tokens
 
-    API_URL = 'https://api.fitbit.com/1/user/-/profile.json'
-    access_token = tokens.get('access_token')
-
+    if tokens is None:
+        return {}
+    
     headers = {
-        'Authorization': f'Bearer {access_token}'
+        'Authorization': f'Bearer {tokens.get('access_token')}'
     }
 
-    response = requests.get(API_URL, headers=headers)
-    print(response.json())  # User profile data
+    return requests.get(url, headers=headers).json()

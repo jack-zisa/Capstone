@@ -1,4 +1,5 @@
 import hashlib
+import auth
 
 # Data source keys
 APPLE_WATCH: str = 'apple_watch'
@@ -37,6 +38,13 @@ class Person:
         self.ethnicity = ethnicity
         self.smokes = smokes
         self.occupation = occupation
+    
+    def __str__(self):
+        return f'{self.age}|{self.gender}|{self.height}|{self.weight}|{self.data_source_type}|{self.uuid}|{self.city}|{self.state}|{self.ethnicity}|{self.smokes}'
+    
+    def fromRequest():
+        data: dict = auth.request('https://api.fitbit.com/1/user/-/profile.json')['user']
+        return Person(data['age'], data['gender'][0], data['height'], data['weight'], FITBIT, f'{data['firstName']} {data['lastName']}', '', '', '', False, Occupation('', '', False, False))
 
 class HealthRecord:
     def __init__(self, person_id: str, timestamp: str,

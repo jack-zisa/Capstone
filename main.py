@@ -4,6 +4,7 @@ import fitbit.load as fb_load
 import export as exp
 import chatgpt
 import auth
+import cloud
 
 openai_api_key: str = ''
 fitbit_client_id: str = ''
@@ -21,9 +22,14 @@ with open('secrets.txt', 'r') as secrets:
 
 chatgpt.init(openai_api_key)
 auth.authenticate(fitbit_client_id, fitbit_client_secret)
+cloud.init()
 
 persons: dict = {}
 data: dict = {}
+
+auth_person: objs.Person = objs.Person.fromRequest()
+print(auth_person)
+persons[auth_person.uuid] = auth_person
 
 person1: objs.Person = objs.Person(22, 'F', 64, 107, objs.APPLE_WATCH, 'heather_belitskus', 'Middletown', 'DE', 'caucasian', False, objs.Occupation('Wilmington', 'DE', True, False))
 persons[person1.uuid] = person1

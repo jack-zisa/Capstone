@@ -1,4 +1,5 @@
 import objects as objs
+import cloud
 import os
 
 def export(persons: dict, data: dict):
@@ -22,3 +23,7 @@ def export(persons: dict, data: dict):
         for key in persons.keys():
             person: objs.Person = persons[key]
             file.write(f'{person.uuid}|{person.age}|{person.gender}|{person.height}|{person.weight}|{person.city}|{person.state}|{person.ethnicity}|{person.smokes}|{person.occupation.city}|{person.occupation.state}|{person.occupation.remote}|{person.occupation.physical}\n')
+    
+    print('Registering persons...')
+    for person in persons.values():
+        cloud.register_user(person)
