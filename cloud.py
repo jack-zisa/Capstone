@@ -14,7 +14,7 @@ def init():
     credentials = service_account.Credentials.from_service_account_file('genuine-flight-397402-20e701a5e711.json')
     client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 
-    print(f'Found Google BigQuery project {client.project}')
+    print(f'Found Google BigQuery project \'{client.project}\'')
 
 def register_user(person: objs.Person):
     df = pd.DataFrame([
