@@ -40,9 +40,9 @@ def authenticate(client_id: str, client_secret: str):
     # Fitbit requires Basic Authentication using Client ID and Secret
     response = requests.post(
         TOKEN_URL,
-        data=data,
-        auth=HTTPBasicAuth(client_id, client_secret),
-        headers={'Content-Type': 'application/x-www-form-urlencoded'}
+        data = data,
+        auth = HTTPBasicAuth(client_id, client_secret),
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     )
 
     tokens = response.json()

@@ -12,7 +12,7 @@ USERS_TABLE_ID = 'users'
 def init():
     global client
     credentials = service_account.Credentials.from_service_account_file('genuine-flight-397402-20e701a5e711.json')
-    client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+    client = bigquery.Client(credentials = credentials, project = PROJECT_ID)
 
     print(f'Found Google BigQuery project \'{client.project}\'')
 
