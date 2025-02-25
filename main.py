@@ -2,12 +2,25 @@ import objects as objs
 import apple_watch.load as ap_load
 import fitbit.load as fb_load
 import export as exp
+import chatgpt
 import auth
 
 openai_api_key: str = ''
+fitbit_client_id: str = ''
+fitbit_client_secret: str = ''
 
 with open('secrets.txt', 'r') as secrets:
-    openai_api_key = secrets.readline()
+    for line in secrets.readlines():
+        line_data = line.split('=')
+        if line_data[0] == 'openai_api_key':
+            openai_api_key = line_data[1].strip().replace('\n','')
+        elif line_data[0] == 'fitbit_client_id':
+            fitbit_client_id = line_data[1].strip().replace('\n','')
+        elif line_data[0] == 'fitbit_client_secret':
+            fitbit_client_secret = line_data[1].strip().replace('\n','')
+
+chatgpt.init(openai_api_key)
+auth.authenticate(fitbit_client_id, fitbit_client_secret)
 
 persons: dict = {}
 data: dict = {}
@@ -26,5 +39,4 @@ fb_load.load(persons, data)
 
 exp.export(persons, data)
 
-auth.init(openai_api_key)
 #auth.query(person1, {"Name": "Alice", "Age": 25, "Height": "5'6\"", "Weight": "130 lbs"})

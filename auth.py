@@ -1,36 +1,61 @@
-from openai import OpenAI
-import objects as objs
+import webbrowser
+from urllib.parse import urlencode
 
-client: OpenAI = None
+def authenticate(client_id: str, client_secret: str):
+    print(f'client_id: {client_id}')
+    print(f'client_secret: {client_secret}')
+    REDIRECT_URI = 'https://github.com/jack-zisa/Capstone'
+    SCOPE = 'activity heartrate location nutrition profile settings sleep social weight'
+    AUTH_URL = 'https://www.fitbit.com/oauth2/authorize'
 
-def init(key: str):
-    global client
-    client = OpenAI(api_key = key)
+    params = {
+        'client_id': client_id,
+        'response_type': 'code',
+        'scope': SCOPE,
+        'redirect_uri': REDIRECT_URI
+    }
 
-def query(person: objs.Person, health_data: dict):
-    if client is None:
-        print('Client not initialized')
-        return
+    # Open the authorization URL in a browser
+    auth_link = f'{AUTH_URL}?{urlencode(params)}'
+    print(f'Go to the following link to authorize:\n{auth_link}')
+    webbrowser.open(auth_link)
 
-    message: str = f'''Using the following demographic data and health data tables, make an assessment on whether this person may be facing a medical issue.
+    # STEP 2 - TOKENS
 
-HEALTH DATA:    
-{'|'.join(health_data.keys())}
-{'|'.join('-' * len(health_data))}
+    import requests
+    from requests.auth import HTTPBasicAuth
 
-DEMOGRAPHIC DATA:
-age|gender|height|weight|city|state|ethnicity|smokes|occupation_city|occupation_state|occupation_remote|occupation_physical
--|-|-|-|-|-|-|-|-|-|-|-
-{person.age}|{person.gender}|{person.height}|{person.weight}|{person.city}|{person.state}|{person.ethnicity}|{person.smokes}|{person.occupation.city}|{person.occupation.state}|{person.occupation.remote}|{person.occupation.physical}
+    TOKEN_URL = 'https://api.fitbit.com/oauth2/token'
 
-Please provide your conclusions in table format with the following columns: Issue Name, Issue Severity (low, medium, high), and Issue Reasoning.
-'''
-    completion = client.chat.completions.create(
-        model = 'gpt-4o-mini',
-        store = False,
-        messages = [
-            {'role': 'user', 'content': message}
-        ]
+    auth_code = input('Enter the authorization code from URL: ')
+
+    data = {
+        'client_id': client_id,
+        'grant_type': 'authorization_code',
+        'code': auth_code,
+        'redirect_uri': REDIRECT_URI
+    }
+
+    # Fitbit requires Basic Authentication using Client ID and Secret
+    response = requests.post(
+        TOKEN_URL,
+        data=data,
+        auth=HTTPBasicAuth(client_id, client_secret),
+        headers={'Content-Type': 'application/x-www-form-urlencoded'}
     )
 
-    print(completion.choices[0].message.content)
+    tokens = response.json()
+    print('Access Token:', tokens.get('access_token'))
+    print('Refresh Token:', tokens.get('refresh_token'))
+
+    # STEP 3 - REQUEST DATA
+
+    API_URL = 'https://api.fitbit.com/1/user/-/profile.json'
+    access_token = tokens.get('access_token')
+
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+
+    response = requests.get(API_URL, headers=headers)
+    print(response.json())  # User profile data
