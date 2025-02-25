@@ -2,8 +2,6 @@ import webbrowser
 from urllib.parse import urlencode
 
 def authenticate(client_id: str, client_secret: str):
-    print(f'client_id: {client_id}')
-    print(f'client_secret: {client_secret}')
     REDIRECT_URI = 'https://github.com/jack-zisa/Capstone'
     SCOPE = 'activity heartrate location nutrition profile settings sleep social weight'
     AUTH_URL = 'https://www.fitbit.com/oauth2/authorize'
