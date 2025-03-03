@@ -24,8 +24,6 @@ def authenticate(client_id: str, client_secret: str):
     print(f'Go to the following link to authorize:\n{auth_link}')
     webbrowser.open(auth_link)
 
-    # STEP 2 - TOKENS
-
     TOKEN_URL = 'https://api.fitbit.com/oauth2/token'
 
     auth_code = input('Enter the authorization code from URL: ')
