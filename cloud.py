@@ -34,4 +34,13 @@ def register_user(person: objs.Person):
 
     print(f'Registered user \'{person.uuid}\'')
 
+def store_health_data(person: objs.Person, data: dict):
+    '''
+    Iterate through all the data
+    For each person, youll get all the data from the current day based on the timestamp
+    Store it in a new dictionary
+    Load it into google cloud
+    '''
+    pass
+
 
