@@ -2,6 +2,35 @@ import objects as objs
 import cloud
 import os
 
+def average_health_data(persons: dict, data: dict) -> dict:
+    # iterate through all the data per-person
+    # dictionary structure: data[person.uuid][timestamp]
+    # get all the data from the current day based on the timestamps
+    # average all the data per-data type, only if it is numerical
+    '''
+return a dictionary with the following structure:
+{
+    '87a57034f9c4951938961323d376986f8d6a0bc66d41584633d9e14b22b59a9e': {
+        'date': ''
+        'average_heart_rate'
+        average_water_intake
+        average_respiratory_rate
+        average_resting_energy_burned
+        average_active_energy_burned
+        average_audio_exposure
+        average_oxygen_consumption
+        average_heart_rate_variability
+        average_sleep_blood_oxygen_saturation
+        average_oxygen_saturation
+        average_sleep_score
+        average_sleep_time
+        average_sleeping_heart_rate
+        etc...
+    }
+}
+    '''
+    pass
+
 def export(persons: dict, data: dict):
     if not os.path.exists('exports/'):
         os.makedirs('exports/')

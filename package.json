@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@tableau/embedding-api-react": "^3.12.1"
+  }
+}

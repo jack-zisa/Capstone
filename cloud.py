@@ -33,3 +33,5 @@ def register_user(person: objs.Person):
     job.result()
 
     print(f'Registered user \'{person.uuid}\'')
+
+
