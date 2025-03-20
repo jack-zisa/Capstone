@@ -11,7 +11,7 @@ RUN npm ci
 COPY frontend/ ./ 
 
 # Build the frontend (React app)
-RUN npm install react-router-dom && npm install axios && npm install react-markdown && npm run build
+RUN npm install react-router-dom && npm install axios && npm run build
 
 # Backend build stage
 FROM python:3.9 AS backend-build

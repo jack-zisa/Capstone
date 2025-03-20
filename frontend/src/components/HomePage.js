@@ -8,7 +8,7 @@ function HomePage() {
   return (
     <div className="HomePage">
       <h2>Welcome</h2>
-      {isLoggedIn ? <></> : <FitbitLoginForm/>}
+      <FitbitLoginForm/>
       <FitbitSyncButton/>
       <AnalyzeDataButton/>
     </div>

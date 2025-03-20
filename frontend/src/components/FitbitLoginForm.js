@@ -50,7 +50,7 @@ const FitbitLoginForm = () => {
     <div className="fitbit-login-form">
         <h2>Fitbit Login</h2>
         <form onSubmit={handleSubmit}>
-            <div>
+          <div>
             <label htmlFor="email">Email</label>
             <input
                 type="email"
@@ -70,12 +70,9 @@ const FitbitLoginForm = () => {
                 required
             />
             </div>
-            {error && <div className="error-message">{error}</div>}
+              {error && <div className="error-message">{error}</div>}
             <div>
-            <button type="submit" disabled={loading}>
-                {loading ? 'Logging in...' : 'Login'}
-            </button>
-            </div>
+          </div>
         </form>
 
     {/* Fitbit OAuth Login Button */}
