@@ -1,0 +1,11 @@
+flask
+gunicorn
+flask-cors
+flask-session
+openai
+google-cloud-bigquery
+pandas
+google
+pyjwt
+redis
+google-cloud-secret-manager

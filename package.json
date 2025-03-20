@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "@tableau/embedding-api-react": "^3.12.1"
+    "@tableau/embedding-api-react": "^3.12.1",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.3.0"
   }
 }
