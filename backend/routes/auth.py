@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify, redirect, session
-from utils.auth_utils import hash
 from utils.cloud_utils import invalidate_token, generate_jwt, store_fitbit_tokens, access_secret
 import requests
 import database as db
 import uuid
 import base64
+import hashlib
 
 FITBIT_CLIENT_ID = access_secret('fitbit_client_id')
 FITBIT_CLIENT_SECRET = access_secret('fitbit_client_secret')
@@ -24,7 +24,7 @@ def register():
         return jsonify({"success": False, "error": "Username and password required"}), 400
 
     # Hash the password
-    password_hash = hash(password)
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
     user_uuid = str(uuid.uuid4())
 
     # Check if user exists
@@ -54,7 +54,7 @@ def login():
     password = data.get("password")
 
     # Hash the password for lookup
-    hashed_password = hash(password)
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
     query = f"""
     SELECT uuid, username FROM `{db.USERS_TABLE_ID}`
