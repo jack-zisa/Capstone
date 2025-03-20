@@ -94,7 +94,7 @@ def store_data_in_bigquery(uuid, fitbit_data):
     if errors:
         print("BigQuery errors:", errors)
 
-def get_user_data(uuid, timestamp) -> list:
+def get_user_health_data(uuid, timestamp) -> list:
     table_id = f"{db.DATA_DATASET_ID}.daily"
     # ADD 'and timestamp = @timestamp' TO QUERY
     query = f"SELECT * FROM `{table_id}` WHERE uuid = @uuid"
