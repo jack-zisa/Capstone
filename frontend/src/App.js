@@ -5,10 +5,11 @@ import RegisterForm from "./components/RegisterForm";
 import HomePage from "./components/HomePage";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import AccountPage from "./components/AccountPage";
 
 const ProtectedRoute = ({ children }) => {
   const { isLoggedIn } = useAuth();
-  return isLoggedIn ? children : <Navigate to="/" replace />; 
+  return isLoggedIn ? children : <Navigate to="/" replace/>; 
 };
 
 function App() {
@@ -20,16 +21,19 @@ function App() {
         <div className="App">
           <Routes>
             {/* Login Page (Default) */}
-            <Route path="/" element={<LoginForm setUser={setUser} />} />
+            <Route path="/" element={<LoginForm setUser={setUser}/>}/>
 
             {/* Register Page */}
-            <Route path="/register" element={<RegisterForm setUser={setUser} />} />
+            <Route path="/register" element={<RegisterForm setUser={setUser}/>}/>
 
             {/* Protected Home Page */}
-            <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path="/home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+
+            {/* Protected Account Page */}
+            <Route path="/account" element={<ProtectedRoute><AccountPage/></ProtectedRoute>}/>
 
             {/* Redirect all other paths to "/" */}
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/"/>}/>
           </Routes>
         </div>
       </Router>

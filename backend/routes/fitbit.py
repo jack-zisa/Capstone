@@ -1,11 +1,25 @@
-from flask import Blueprint, jsonify, session
+from flask import Blueprint, jsonify, session, request
 from utils.fitbit_utils import get_fitbit_data
-from utils.cloud_utils import store_data_in_bigquery, get_user_by_uuid
+from utils.cloud_utils import store_data_in_bigquery, get_user_by_uuid, access_secret
 
 fitbit_blueprint = Blueprint('fitbit', __name__, url_prefix = '/fitbit')
 
+@fitbit_blueprint.route('/webhook', methods=['POST', 'GET'])
+def fitbit_webhook():
+    if request.method == 'GET':
+        verify_code = request.args.get('verify')
+        if verify_code == access_secret('fitbit_webhook_verify_code'):
+            return '', 204
+        else:
+            return 'Not Found', 404
+    elif request.method == 'POST':
+        # Handle the incoming Fitbit data
+        data = request.json
+        print("Received Fitbit data:", data)
+        return '', 204
+
 @fitbit_blueprint.route("/sync", methods=["POST"])
-def sync_fitbit_data():
+def fibit_sync():
     """Fetch and store Fitbit data in BigQuery."""
     uuid = session.get("uuid")
     if not uuid:

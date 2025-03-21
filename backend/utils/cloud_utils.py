@@ -109,7 +109,6 @@ def get_user_health_data(uuid, timestamp) -> list:
     for row in job.result():
         row_dict = dict(row.items())  # Convert each row into a dictionary
         data.append(row_dict)
-    
     return data
 
 def access_secret(secret_id):
