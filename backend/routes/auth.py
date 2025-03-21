@@ -94,7 +94,7 @@ def fitbit_login():
         f"{FITBIT_AUTH_URL}?response_type=code"  # response_type must be 'code' for Authorization Code Flow
         f"&client_id={FITBIT_CLIENT_ID}"
         f"&redirect_uri={FITBIT_REDIRECT_URI}"
-        f"&scope=heartrate%20profile"  # Add the required scopes
+        f"&scope=heartrate%20nutrition%20sleep%20weight%20activity%20profile"  # Add the required scopes
         f"&state={state}&prompt=login"
     )
     return redirect(auth_url)

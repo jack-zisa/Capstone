@@ -6,9 +6,10 @@ const AuthContext = createContext();
 // Provider component
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isFitbitSynced, setFitbitSynced] = useState(false);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, isFitbitSynced, setFitbitSynced }}>
       {children}
     </AuthContext.Provider>
   );

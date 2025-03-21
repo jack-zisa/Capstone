@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useAuth } from "../context/AuthContext"
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from 'axios';
 
 const FitbitLoginForm = () => {
@@ -6,7 +8,9 @@ const FitbitLoginForm = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+  const { setFitbitSynced } = useAuth();
+  const navigate = useNavigate();
+
   const clientId = '23Q3B8';
   const redirectUri = 'https://ai-health-analytics-968401790916.us-central1.run.app/auth/fitbit/callback';
   const scope = 'heartrate profile';
@@ -35,12 +39,16 @@ const FitbitLoginForm = () => {
       if (response.data.success) {
         // Redirect to another page or show success
         console.log('Login successful!');
+        setFitbitSynced(true);
+        navigate("/home")
       } else {
         setError('Invalid credentials');
+        setFitbitSynced(false);
       }
     } catch (err) {
       setError('An error occurred during login');
       console.error('Error during login:', err);
+      setFitbitSynced(false);
     } finally {
       setLoading(false);
     }

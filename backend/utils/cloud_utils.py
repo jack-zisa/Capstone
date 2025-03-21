@@ -1,10 +1,10 @@
 from google.cloud import bigquery, secretmanager
-import jwt
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
-import database as db
 from datetime import datetime
+import database as db
 import google_crc32c
+import jwt
 
 def get_user_by_username(username):
     """Retrieves user data by username from BigQuery."""
@@ -68,10 +68,19 @@ def invalidate_token(token):
 def store_fitbit_tokens(uuid, access_token, refresh_token):
     query = f"""
     UPDATE `{db.USERS_TABLE_ID}`
-    SET fitbit_access_token = '{access_token}', fitbit_refresh_token = '{refresh_token}'
-    WHERE uuid = '{uuid}'
+    SET fitbit_access_token = @access_token, fitbit_refresh_token = @refresh_token
+    WHERE uuid = @uuid
     """
-    db.client.query(query)
+    
+    job_config = bigquery.QueryJobConfig(
+        query_parameters=[
+            bigquery.ScalarQueryParameter("access_token", "STRING", access_token),
+            bigquery.ScalarQueryParameter("refresh_token", "STRING", refresh_token),
+            bigquery.ScalarQueryParameter("uuid", "STRING", uuid),
+        ]
+    )
+
+    db.client.query(query, job_config=job_config)  # Executes safely
 
 def store_data_in_bigquery(uuid, fitbit_data):
     """Insert Fitbit data into Google BigQuery."""
@@ -110,6 +119,25 @@ def get_user_health_data(uuid, timestamp) -> list:
         row_dict = dict(row.items())  # Convert each row into a dictionary
         data.append(row_dict)
     return data
+
+def set_user_demographics(uuid, data: dict):
+    query = f"""
+    UPDATE `{db.USERS_TABLE_ID}`
+    SET gender = @gender, age = @age, height = @height, weight = @weight
+    WHERE uuid = @uuid
+    """
+    
+    job_config = bigquery.QueryJobConfig(
+        query_parameters=[
+            bigquery.ScalarQueryParameter("gender", "STRING", data.get('gender', '')),
+            bigquery.ScalarQueryParameter("age", "INT64", data.get('age', 0)),
+            bigquery.ScalarQueryParameter("height", "FLOAT64", data.get('height', 0.0)),
+            bigquery.ScalarQueryParameter("weight", "FLOAT64", data.get('weight', 0.0)),
+            bigquery.ScalarQueryParameter("uuid", "STRING", uuid),
+        ]
+    )
+
+    db.client.query(query, job_config=job_config)
 
 def access_secret(secret_id):
     """

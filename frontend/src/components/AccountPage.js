@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function AccountPage() {
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState('unset');
   const [age, setAge] = useState(1);
   const [weight, setWeight] = useState(0.0);
   const [height, setHeight] = useState(0.0);
@@ -39,6 +39,20 @@ function AccountPage() {
     }
   };
 
+  useEffect(() => {
+    fetch('/user/demographics')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+          setGender(data.gender || '');
+          setAge(data.age || 0);
+          setWeight(data.weight || 0.0);
+          setHeight(data.height || 0.0);
+        }
+      })
+      .catch((error) => console.error("Error fetching demographics:", error));
+  }, []);
+
   return (
     <div className="AccountPage">
       <h2>Account</h2>
@@ -46,6 +60,7 @@ function AccountPage() {
         <div>
           <label htmlFor="gender">Gender</label>
           <select name="gender" id="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
+            <option value="unset"><b>Unset</b></option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
@@ -53,7 +68,7 @@ function AccountPage() {
         </div>
         <div>
           <label htmlFor="age">Age</label>
-          <input type="number" id="age" value={age} onChange={(e) => setAge(e.target.value)} min="1"/>
+          <input type="number" id="age" value={age} onChange={(e) => setAge(e.target.value)} min="0"/>
         </div>
         <div>
           <label htmlFor="weight">Weight</label>
