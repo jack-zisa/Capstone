@@ -47,4 +47,3 @@ def set_demographics():
 
         set_user_demographics(uuid, data)
         return jsonify({"message": "Demographics saved successfully!"})
-    

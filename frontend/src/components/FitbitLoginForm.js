@@ -30,7 +30,7 @@ const FitbitLoginForm = () => {
 
     try {
       // Example POST request to authenticate the user
-      const response = await axios.post('https://https://ai-health-analytics-968401790916.us-central1.run.app/auth/fitbit/login', {
+      const response = await axios.post('https://ai-health-analytics-968401790916.us-central1.run.app/auth/fitbit/login', {
         email,
         password,
       });

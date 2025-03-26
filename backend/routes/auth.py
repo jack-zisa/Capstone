@@ -1,10 +1,13 @@
 from flask import Blueprint, request, jsonify, redirect, session
 from utils.cloud_utils import invalidate_token, generate_jwt, store_fitbit_tokens, access_secret
+from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token
 import requests
 import database as db
 import uuid
 import base64
 import hashlib
+import os
 
 FITBIT_CLIENT_ID = access_secret('fitbit_client_id')
 FITBIT_CLIENT_SECRET = access_secret('fitbit_client_secret')
@@ -139,3 +142,14 @@ def fitbit_callback():
         return redirect(request.host_url)
 
     return jsonify({"error": f"Failed to retrieve Fitbit access token: {response.text}"}), 400
+
+@auth_blueprint.route("/google/login", methods=["POST"])
+def google_auth():
+    token = request.json.get("token")
+    try:
+        user_info = id_token.verify_oauth2_token(token, google_requests.Request(), access_secret('google_client_id'))
+        user_email = user_info["email"]
+        
+        return jsonify({"message": "Authenticated", "email": user_email})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 401

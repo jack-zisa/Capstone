@@ -9,3 +9,6 @@ google
 pyjwt
 redis
 google-cloud-secret-manager
+google-auth
+google-auth-oauthlib
+google-auth-httplib2

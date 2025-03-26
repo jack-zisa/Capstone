@@ -5,6 +5,7 @@ from routes.auth import auth_blueprint
 from routes.fitbit import fitbit_blueprint
 from routes.analysis import analysis_blueprint
 from routes.user import user_blueprint
+from routes.google import google_blueprint
 from utils.cloud_utils import access_secret
 import redis
 
@@ -14,6 +15,7 @@ app.register_blueprint(auth_blueprint)
 app.register_blueprint(fitbit_blueprint)
 app.register_blueprint(analysis_blueprint)
 app.register_blueprint(user_blueprint)
+app.register_blueprint(google_blueprint)
 app.secret_key = access_secret('app_secret_key')
 
 app.config['SESSION_TYPE'] = 'redis'

@@ -139,6 +139,21 @@ def set_user_demographics(uuid, data: dict):
 
     db.client.query(query, job_config=job_config)
 
+def set_user_email(uuid, email: str):
+    query = f"""
+    UPDATE `{db.USERS_TABLE_ID}`
+    SET email = @email
+    WHERE uuid = @uuid
+    """
+    
+    job_config = bigquery.QueryJobConfig(
+        query_parameters=[
+            bigquery.ScalarQueryParameter("email", "STRING", email),
+        ]
+    )
+
+    db.client.query(query, job_config=job_config)
+
 def access_secret(secret_id):
     """
     Access a secret version from Google Cloud Secret Manager.
