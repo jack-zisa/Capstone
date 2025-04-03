@@ -15,7 +15,7 @@ def set_demographics():
     if request.method == 'GET':
         # Fetch user demographics
         query = f"""
-        SELECT gender, age, height, weight 
+        SELECT gender, age, height, weight, phone_number,
         FROM `{db.USERS_TABLE_ID}`
         WHERE uuid = @uuid
         """
@@ -34,7 +34,8 @@ def set_demographics():
                 "gender": row.gender,
                 "age": row.age,
                 "height": row.height,
-                "weight": row.weight
+                "weight": row.weight,
+                "phone_number": row.phone_number
             })
         else:
             return jsonify({"error": "User not found"}), 404
@@ -45,5 +46,7 @@ def set_demographics():
         if not data:
             return jsonify({"error": "Invalid JSON data"}), 400
 
+        print(data)
+        
         set_user_demographics(uuid, data)
         return jsonify({"message": "Demographics saved successfully!"})

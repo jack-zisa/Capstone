@@ -5,6 +5,7 @@ function AccountPage() {
   const [age, setAge] = useState(1);
   const [weight, setWeight] = useState(0.0);
   const [height, setHeight] = useState(0.0);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();  // Prevents the form from refreshing the page
@@ -14,6 +15,7 @@ function AccountPage() {
       age,
       weight,
       height,
+      phoneNumber,
     };
 
     try {
@@ -44,10 +46,11 @@ function AccountPage() {
       .then((res) => res.json())
       .then((data) => {
         if (!data.error) {
-          setGender(data.gender || '');
+          setGender(data.gender || "");
           setAge(data.age || 0);
           setWeight(data.weight || 0.0);
           setHeight(data.height || 0.0);
+          setPhoneNumber(data.phoneNumber || "");
         }
       })
       .catch((error) => console.error("Error fetching demographics:", error));
@@ -77,6 +80,10 @@ function AccountPage() {
         <div>
           <label htmlFor="height">Height</label>
           <input type="number" id="height" value={height} onChange={(e) => setHeight(e.target.value)} min="0" step="0.1"/>
+        </div>
+        <div>
+          <label htmlFor="phone_number">Phone Number</label>
+          <input type="tel" id="phone_number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} pattern="^\+?[0-9\s\-]+$" inputMode="numeric"/>
         </div>
         <button type="submit">Submit</button>
       </form>

@@ -86,14 +86,14 @@ def store_data_in_bigquery(uuid, fitbit_data):
     """Insert Fitbit data into Google BigQuery."""
     table_id = f"{db.DATA_DATASET_ID}.daily"
 
-    heart_data = fitbit_data["activities-heart"][0]["value"]["heartRateZones"]
+    heart_data = fitbit_data['heart_rate']["activities-heart"][0]["value"]["heartRateZones"]
 
     # Prepare rows to insert for each heart rate zone
     rows_to_insert = []
     for zone in heart_data:
         rows_to_insert.append({
             "uuid": uuid,
-            "timestamp": datetime.fromisoformat(fitbit_data["activities-heart"][0]["dateTime"].rstrip('Z')).isoformat(),
+            "timestamp": datetime.fromisoformat(fitbit_data['heart_rate']["activities-heart"][0]["dateTime"].rstrip('Z')).isoformat(),
             "heart_rate_min": zone["min"],
             "heart_rate_max": zone["max"],
             "heart_rate_type": zone["name"],
@@ -123,16 +123,17 @@ def get_user_health_data(uuid, timestamp) -> list:
 def set_user_demographics(uuid, data: dict):
     query = f"""
     UPDATE `{db.USERS_TABLE_ID}`
-    SET gender = @gender, age = @age, height = @height, weight = @weight
+    SET gender = @gender, age = @age, height = @height, weight = @weight, phone_number = @phone_number
     WHERE uuid = @uuid
     """
     
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
-            bigquery.ScalarQueryParameter("gender", "STRING", data.get('gender', '')),
+            bigquery.ScalarQueryParameter("gender", "STRING", data.get('gender', "")),
             bigquery.ScalarQueryParameter("age", "INT64", data.get('age', 0)),
             bigquery.ScalarQueryParameter("height", "FLOAT64", data.get('height', 0.0)),
             bigquery.ScalarQueryParameter("weight", "FLOAT64", data.get('weight', 0.0)),
+            bigquery.ScalarQueryParameter("phone_number", "STRING", data.get('phoneNumber', "")),
             bigquery.ScalarQueryParameter("uuid", "STRING", uuid),
         ]
     )
@@ -148,6 +149,7 @@ def set_user_email(uuid, email: str):
     
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
+            bigquery.ScalarQueryParameter("uuid", "STRING", uuid),
             bigquery.ScalarQueryParameter("email", "STRING", email),
         ]
     )

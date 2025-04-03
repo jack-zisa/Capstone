@@ -1,23 +1,41 @@
+from flask import request, jsonify
 from openai import OpenAI
 from utils.cloud_utils import access_secret
+from twilio.rest import Client
 import re
 
-client: OpenAI = OpenAI(api_key = access_secret('openai_api_key'))
+openai_client: OpenAI = OpenAI(api_key = access_secret('openai_api_key'))
+twilio_client = Client(access_secret('twilio_account_sid'), access_secret('twilio_auth_token'))
 
 def query(message: str) -> str:
-    if client is None:
+    if openai_client is None:
         print('Client not initialized')
         return
 
-    completion = client.chat.completions.create(
+    completion = openai_client.chat.completions.create(
         model = 'gpt-4o-mini',
         store = False,
         messages = [
             {'role': 'user', 'content': message}
         ]
     )
+    
+    result = completion.choices[0].message.content
 
-    return completion.choices[0].message.content
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid JSON data"}), 400
+
+    #alert(result, "")
+
+    return result
+
+def alert(message: str, phone_number: str):
+    twilio_client.api.account.messages.create(
+        body=message,
+        from_=access_secret('twilio_phone_number'),
+        to="+12153375787"
+    )
 
 def parse_markdown_table(markdown_str):
     # Regex to match table structure

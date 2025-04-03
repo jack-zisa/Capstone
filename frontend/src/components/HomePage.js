@@ -15,7 +15,7 @@ function HomePage() {
     <div className="HomePage">
       <h2>Welcome</h2>
       {isFitbitSynced ? <></> : <FitbitLoginForm/>}
-      {isFitbitSynced ? <FitbitSyncButton/> : <></>}
+      <FitbitSyncButton/>
       {isGoogleSynced ? <></> : <GoogleAuthButton/>}
       {isGoogleSynced ? <GoogleSyncButton/> : <></>}
       <AnalyzeDataButton/>
