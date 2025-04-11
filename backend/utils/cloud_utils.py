@@ -87,16 +87,40 @@ def store_data_in_bigquery(uuid, fitbit_data):
     table_id = f"{db.DATA_DATASET_ID}.daily"
 
     heart_data = fitbit_data['heart_rate']["activities-heart"][0]["value"]["heartRateZones"]
+    spo2_data = fitbit_data['spo2']
+    br_data = fitbit_data['breathing_ate']
+    hrv_data = fitbit_data['hrv']
 
     # Prepare rows to insert for each heart rate zone
     rows_to_insert = []
     for zone in heart_data:
         rows_to_insert.append({
             "uuid": uuid,
-            "timestamp": datetime.fromisoformat(fitbit_data['heart_rate']["activities-heart"][0]["dateTime"].rstrip('Z')).isoformat(),
+            "timestamp": datetime.fromisoformat(fitbit_data['heart_rate']["activities-heart"][0]['dateTime']).isoformat(),
             "heart_rate_min": zone["min"],
             "heart_rate_max": zone["max"],
             "heart_rate_type": zone["name"],
+        })
+    if spo2_data:
+        rows_to_insert.append({
+            "uuid": uuid,
+            "timestamp": datetime.fromisoformat(spo2_data["dateTime"].rstrip('Z')).isoformat(),
+            "sp02_min": spo2_data['value']["min"],
+            "sp02_max": spo2_data['value']["max"],
+            "sp02_avg": spo2_data['value']['avg'],
+        })
+    if br_data:
+        rows_to_insert.append({
+            "uuid": uuid,
+            "timestamp": datetime.fromisoformat(br_data["dateTime"].rstrip('Z')).isoformat(),
+            "breathing_rate": br_data['value']["breathingRate"],
+        })
+    if hrv_data:
+        rows_to_insert.append({
+            "uuid": uuid,
+            "timestamp": datetime.fromisoformat(hrv_data["dateTime"].rstrip('Z')).isoformat(),
+            "daily_rmssd": hrv_data['value']["dailyRmssd"],
+            "deep_rmssd": hrv_data['value']["deepRmssd"],
         })
 
     errors = db.client.insert_rows_json(table_id, rows_to_insert)
