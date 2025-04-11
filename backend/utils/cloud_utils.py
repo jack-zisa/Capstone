@@ -88,7 +88,7 @@ def store_data_in_bigquery(uuid, fitbit_data):
 
     heart_data = fitbit_data['heart_rate']["activities-heart"][0]["value"]["heartRateZones"]
     spo2_data = fitbit_data['spo2']
-    br_data = fitbit_data['breathing_ate']
+    br_data = fitbit_data['breathing_rate']
     hrv_data = fitbit_data['hrv']
 
     # Prepare rows to insert for each heart rate zone
